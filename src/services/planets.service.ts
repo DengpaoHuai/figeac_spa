@@ -15,15 +15,15 @@ export type Planet = {
   url: string;
 };
 
-type PlanetResponse = {
+export type PlanetResponse = {
   count: number;
   next: string | null;
   previous: string | null;
   results: Planet[];
 };
 
-export const getData = async () => {
-  const response = await fetch("https://swapi.dev/api/planets");
+export const getData = async (url: string) => {
+  const response = await fetch(url);
   const results: PlanetResponse = await response.json();
   console.log(results);
   return results;
