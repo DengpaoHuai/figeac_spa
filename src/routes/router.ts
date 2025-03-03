@@ -1,9 +1,11 @@
+import CreateRando from "../pages/CreateRando";
 import HomePage from "../pages/HomePage";
 import PlanetsPage from "../pages/PlanetsPage";
 
 const routes = {
   "/": HomePage,
   "/planets": PlanetsPage,
+  "/create_rando": CreateRando,
 };
 
 type Routes = keyof typeof routes;
