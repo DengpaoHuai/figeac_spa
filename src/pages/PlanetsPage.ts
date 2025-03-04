@@ -1,4 +1,6 @@
+import { z } from "zod";
 import { getData, PlanetResponse } from "../services/planets.service.ts";
+
 const PlanetsPage = () => {
   document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
   <div>
@@ -66,8 +68,6 @@ const PlanetsPage = () => {
     }
   };
 
-  let errorText: string = "";
-
   const init = async () => {
     try {
       const planets = await getData("https://swapi.dev/api/planets");
@@ -76,11 +76,8 @@ const PlanetsPage = () => {
     } catch (error) {
       //narrowing
       if (error instanceof Error) {
-        errorText = error.message;
       } else if (typeof error === "string") {
-        errorText = error;
       } else {
-        errorText = "An error occurred";
       }
     } finally {
     }

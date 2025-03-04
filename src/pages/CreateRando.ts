@@ -1,3 +1,7 @@
+import randoSchema, { Rando } from "../schemas/rando.schema";
+import { createRando } from "../services/rando.service";
+import postData from "../services/super.service";
+
 const CreateRando = () => {
   document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
     <div>
@@ -10,6 +14,7 @@ const CreateRando = () => {
             <label for="email">Email</label>
             <input type="email" id="email" name="email">
             <button type="submit">Submit</button>
+            <div id="errors"></div>
         </form>
     </div>
   `;
@@ -19,20 +24,22 @@ const CreateRando = () => {
   form?.addEventListener("submit", (e) => {
     e.preventDefault();
     const formData = new FormData(form!);
-    console.log(formData);
     const formValues = Object.fromEntries(formData.entries());
-    console.log(formValues);
-    console.log(typeof formValues);
-    fetch("https://crudcrud.com/api/46d2dd8e017b46368d149e056716ef1b/rando", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formValues),
-    })
-      .then((response) => response.json())
-      .then((data) => console.log(data))
-      .catch((error) => console.log(error));
+
+    const results = randoSchema.safeParse(formValues);
+
+    if (!results.success) {
+      const errorsDiv = document.querySelector<HTMLDivElement>("#errors");
+      errorsDiv!.innerHTML = "";
+      results.error.errors.forEach((error) => {
+        const errorDiv = document.createElement("div");
+        errorDiv.textContent = error.message;
+        errorsDiv!.appendChild(errorDiv);
+      });
+      return;
+    }
+
+    postData<Omit<Rando, "_id">>("rando", results.data).then((data) => {});
   });
 };
 
